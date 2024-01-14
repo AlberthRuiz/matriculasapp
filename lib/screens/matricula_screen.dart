@@ -16,7 +16,14 @@ class _MatriculasHomeState extends State<MatriculasHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(
+          "Matriculas App",
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
+      ),
       body: Column(
         children: [
           ElevatedButton(
