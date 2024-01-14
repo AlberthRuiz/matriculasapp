@@ -1,4 +1,4 @@
-import 'package:matriculasapp/models/Matricula_model.dart';
+import 'package:matriculasapp/models/matricula_model.dart';
 
 class Institucion {
   String nombre;

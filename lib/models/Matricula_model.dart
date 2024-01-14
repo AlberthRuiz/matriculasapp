@@ -1,5 +1,5 @@
-import 'package:matriculasapp/models/Carrera_model.dart';
-import 'package:matriculasapp/models/Person_model.dart';
+import 'package:matriculasapp/models/carrera_model.dart';
+import 'package:matriculasapp/models/person_model.dart';
 
 class Matricula {
   String fecha;
