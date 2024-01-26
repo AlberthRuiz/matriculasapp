@@ -17,7 +17,7 @@ class _MatriculasHomeState extends State<MatriculasHome> {
   final TextEditingController phoneController = TextEditingController();
   List<Carrera> selectedCarreras = [];
 
-  void agregarMatricula() {
+  void agregarMatricula(Institucion institucionElement) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext bc) {
@@ -56,41 +56,30 @@ class _MatriculasHomeState extends State<MatriculasHome> {
                       title: Text(carrerasList[index].nombre),
                       value: selectedCarreras.contains(carrerasList[index]),
                       onChanged: (bool? value) {
-                        setState(() {
-                          if (value == true) {
-                            selectedCarreras.add(carrerasList[index]);
-                          } else {
-                            selectedCarreras.remove(carrerasList[index]);
-                          }
-                        });
+                        if (value == true) {
+                          selectedCarreras.add(carrerasList[index]);
+                        } else {
+                          selectedCarreras.remove(carrerasList[index]);
+                        }
+                        setState(() {});
                       },
                     );
                   },
                 ),
-
-                // DropdownButton<Carrera>(
-                //   value: selectedCarrera,
-                //   onChanged: (newValue) {
-                //     setState(() {
-                //       selectedCarrera = newValue;
-                //     });
-                //   },
-                //   items: carrerasList
-                //       .map<DropdownMenuItem<Carrera>>((Carrera value) {
-                //     return DropdownMenuItem<Carrera>(
-                //       value: value,
-                //       child: Text(value.nombre),
-                //     );
-                //   }).toList(),
-                // ),
                 SizedBox(height: 10),
                 ElevatedButton(
                   child: Text('Agregar Carrera'),
                   onPressed: () {
-                    // Create Matricula object here
-                    // ...
-
-                    Navigator.pop(context); // Close the modal
+                    institucionElement.matriculas.add(Matricula(
+                        fecha: fechaController.text,
+                        hora: horaController.text,
+                        alumno: Person(
+                            name: nombreController.text,
+                            address: addressController.text,
+                            phone: phoneController.text),
+                        carrera: selectedCarreras[0]));
+                    setState(() {});
+                    Navigator.pop(context);
                   },
                 )
               ],
@@ -208,7 +197,7 @@ class _MatriculasHomeState extends State<MatriculasHome> {
                     ),
                     IconButton(
                       onPressed: () {
-                        agregarMatricula();
+                        agregarMatricula(institucionElement);
 
                         setState(() {});
                       },
