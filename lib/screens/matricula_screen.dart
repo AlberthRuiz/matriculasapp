@@ -10,6 +10,156 @@ class MatriculasHome extends StatefulWidget {
 }
 
 class _MatriculasHomeState extends State<MatriculasHome> {
+  final TextEditingController fechaController = TextEditingController();
+  final TextEditingController horaController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  List<Carrera> selectedCarreras = [];
+
+  void agregarMatricula() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextField(
+                  controller: fechaController,
+                  decoration: InputDecoration(labelText: "Fecha"),
+                ),
+                TextField(
+                  controller: horaController,
+                  decoration: InputDecoration(labelText: "Hora"),
+                ),
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(labelText: "Nombre del Alumno"),
+                ),
+                TextField(
+                  controller: addressController,
+                  decoration:
+                      InputDecoration(labelText: "Dirección del Alumno"),
+                ),
+                TextField(
+                  controller: phoneController,
+                  decoration: InputDecoration(labelText: "Teléfono del Alumno"),
+                ),
+                ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: carrerasList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return CheckboxListTile(
+                      title: Text(carrerasList[index].nombre),
+                      value: selectedCarreras.contains(carrerasList[index]),
+                      onChanged: (bool? value) {
+                        setState(() {
+                          if (value == true) {
+                            selectedCarreras.add(carrerasList[index]);
+                          } else {
+                            selectedCarreras.remove(carrerasList[index]);
+                          }
+                        });
+                      },
+                    );
+                  },
+                ),
+
+                // DropdownButton<Carrera>(
+                //   value: selectedCarrera,
+                //   onChanged: (newValue) {
+                //     setState(() {
+                //       selectedCarrera = newValue;
+                //     });
+                //   },
+                //   items: carrerasList
+                //       .map<DropdownMenuItem<Carrera>>((Carrera value) {
+                //     return DropdownMenuItem<Carrera>(
+                //       value: value,
+                //       child: Text(value.nombre),
+                //     );
+                //   }).toList(),
+                // ),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  child: Text('Agregar Carrera'),
+                  onPressed: () {
+                    // Create Matricula object here
+                    // ...
+
+                    Navigator.pop(context); // Close the modal
+                  },
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  final TextEditingController nombreController = TextEditingController();
+  final TextEditingController direccionController = TextEditingController();
+  final TextEditingController rucController = TextEditingController();
+  final TextEditingController telefonoController = TextEditingController();
+
+  void agregarUniversidad() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Container(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: nombreController,
+                    decoration: InputDecoration(labelText: "Nombre"),
+                  ),
+                  TextField(
+                    controller: direccionController,
+                    decoration: InputDecoration(labelText: "Dirección"),
+                  ),
+                  TextField(
+                    controller: rucController,
+                    decoration: InputDecoration(labelText: "RUC"),
+                    keyboardType: TextInputType.number,
+                  ),
+                  TextField(
+                    controller: telefonoController,
+                    decoration: InputDecoration(labelText: "Teléfono"),
+                    keyboardType: TextInputType.phone,
+                  ),
+                  SizedBox(height: 10),
+                  ElevatedButton(
+                    child: Text('Agregar'),
+                    onPressed: () {
+                      institucioneslist.add(Institucion(
+                          nombre: nombreController.text,
+                          direccion: direccionController.text,
+                          ruc: rucController.text,
+                          telefono: telefonoController.text,
+                          matriculas: []));
+                      Navigator.pop(context);
+                      setState(() {});
+                    },
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   List<Person> peopleList = [
     Person(name: "Ana", address: "av 1245", phone: "12345679"),
     Person(name: "Lia", address: "av lima", phone: "9751665"),
@@ -33,16 +183,8 @@ class _MatriculasHomeState extends State<MatriculasHome> {
         actions: [
           IconButton(
             onPressed: () {
-              //AGREGAR INSTITUCIONES
-              institucioneslist.add(
-                Institucion(
-                  nombre: "UTP",
-                  direccion: "AV LIMA 123123",
-                  ruc: "12345678",
-                  telefono: "98765431",
-                  matriculas: [],
-                ),
-              );
+              agregarUniversidad();
+
               setState(() {});
             },
             icon: Icon(Icons.add),
@@ -51,12 +193,6 @@ class _MatriculasHomeState extends State<MatriculasHome> {
       ),
       body: Column(
         children: [
-          ElevatedButton(
-            onPressed: () {
-              setState(() {});
-            },
-            child: Text("Agregar"),
-          ),
           ...institucioneslist.map(
             (institucionElement) => Column(
               children: [
@@ -71,20 +207,25 @@ class _MatriculasHomeState extends State<MatriculasHome> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () => setState(() {
-                        institucionElement.matriculas.add(
-                          Matricula(
-                            fecha: "14/01/2024",
-                            hora: "11:05",
-                            alumno: Person(
-                                name: "pedro",
-                                address: "Avv cusco 123456",
-                                phone: "987654321"),
-                            carrera: carrerasList[1],
-                          ),
-                        );
-                      }),
+                      onPressed: () {
+                        agregarMatricula();
+
+                        setState(() {});
+                      },
                       icon: Icon(Icons.add),
+                    ),
+                    IconButton(
+                      onPressed: () => setState(() {
+                        institucioneslist.remove(institucionElement);
+                      }),
+                      icon: Icon(Icons.delete),
+                    ),
+                    IconButton(
+                      onPressed: () => setState(() {
+                        institucionElement.matriculas.removeRange(
+                            0, institucionElement.matriculas.length);
+                      }),
+                      icon: Icon(Icons.clear),
                     ),
                   ],
                 ),
@@ -104,25 +245,21 @@ class _MatriculasHomeState extends State<MatriculasHome> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          onPressed: () {
-                            print("Editando....");
+                          onPressed: () => setState(() {
                             e.alumno = Person(
                                 name: "ANITA",
                                 address: "CCALLE 456",
                                 phone: "9876543");
-                            setState(() {});
-                          },
+                          }),
                           icon: Icon(
                             Icons.edit,
                             color: Colors.blue,
                           ),
                         ),
                         IconButton(
-                          onPressed: () {
-                            print("Eliminando....");
-                            matriculasList.remove(e);
-                            setState(() {});
-                          },
+                          onPressed: () => setState(() {
+                            institucionElement.matriculas.remove(e);
+                          }),
                           icon: Icon(
                             Icons.delete,
                             color: Colors.red,
